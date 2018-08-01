@@ -1,0 +1,20 @@
+import urllib2
+from bs4 import BeautifulSoup
+
+html_data= urllib2.urlopen("http://www.moneycontrol.com/india/stockpricequote/")
+soup= BeautifulSoup(html_data)
+#print soup.prettify()
+table= soup.find_all('table',{'class':'pcq_tbl MT10'})[0]
+a_tags=table.find_all('a')
+links={}
+for a in a_tags:
+    company_name=a.text
+    m_pagelink=a.get('href')
+    links[company_name]=m_pagelink
+
+company_list=links.keys()
+company_list.sort()
+# mktdet_1
+# stockDtl PB30
+# Bse_Prc_tick_div
+# b_changetext
