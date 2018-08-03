@@ -7,13 +7,24 @@ from Users import get_user
 from models import db
 
 def generate_password(length,complexity):
+    if 0 < complexity < 5:
+        char_set= string.ascii_lowercase
+        pwd =""
+        mandatory_letters_count = 0
+        complexity_charset_dict = {2:[string.digits],3:[string.ascii_uppercase,string.digits],4:[string.ascii_uppercase,string.digits,string.punctuation]}
 
-    char_set_list = [string.ascii_lowercase,string.ascii_uppercase,string.digits,string.punctuation]
-    char_set=""
-    for i in range(0,complexity):
-        char_set += char_set_list[i]
-    pwd = ''.join(random.choices(char_set,k=length))
-    return pwd
+        if complexity_charset_dict.get(complexity):
+            for char_values in complexity_charset_dict.get(complexity):
+                pwd = pwd + random.choice(char_values)
+                mandatory_letters_count += 1
+            char_set += ''.join(complexity_charset_dict.get(complexity))
+        pwd = pwd + ''.join(random.choices(char_set,k=(length-mandatory_letters_count)))
+        passwd = list(pwd)
+        random.shuffle(passwd)
+        pwd = ''.join(passwd)
+        return pwd
+    else:
+        return "Complexity should be between 1 to 4"
 
 
 def check_password_level(passwd):
